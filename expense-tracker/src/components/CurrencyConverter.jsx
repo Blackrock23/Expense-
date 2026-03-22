@@ -14,26 +14,36 @@ export default function CurrencyConverter({ expenses }) {
     setError("");
 
     const apiKey = import.meta.env.VITE_EXCHANGE_API_KEY;
-    if (!apiKey) {
-      setError("API key missing. Check .env file.");
-      setLoading(false);
-      return;
-    }
-
-    fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/INR?symbols=${currency}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.result === "success") {
-          setRate(data.conversion_rates[currency]);
-        } else {
-          setError("API error: " + (data.error_info || "Unknown"));
+    const makeRequest = async (url, parser) => {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) {
+          console.log(`API failed ${res.status}: ${url}`);
+          throw new Error(`Status ${res.status}`);
         }
+        const data = await res.json();
+        setRate(parser(data));
         setLoading(false);
-      })
-      .catch(() => {
-        setError("Failed to load exchange rate");
-        setLoading(false);
+        return;
+      } catch (e) {
+        console.log('API error:', e);
+      }
+    };
+
+    if (apiKey) {
+      // Try paid API first
+      makeRequest(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/INR?symbols=${currency}`, (data) => {
+        if (data.result === "success") return data.conversion_rates[currency];
+      }).catch(() => {
+        // Fallback to free
+        console.log('Falling back to free API');
+        makeRequest(`https://api.exchangerate.host/latest?base=INR&symbols=${currency}`, (data) => data.rates[currency]);
       });
+    } else {
+      // No key, free only
+      makeRequest(`https://api.exchangerate.host/latest?base=INR&symbols=${currency}`, (data) => data.rates[currency]);
+    }
+    setLoading(false);
   }, [currency, lastUpdate]);
 
   return (
@@ -53,7 +63,7 @@ export default function CurrencyConverter({ expenses }) {
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {rate && !loading && !error && (
+      {rate && !loading && (
         <p>
           {currency}: {(total * rate).toFixed(2)}
         </p>
