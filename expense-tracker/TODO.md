@@ -43,3 +43,10 @@
 - [x] Step 5
 - [x] Step 6
 - [x] Step 7
+
+---
+
+## API Key Integration (Currency Exchange Upgrade)
+- [x] Step 1: Create .env with VITE_EXCHANGE_API_KEY
+- [x] Step 2: Update CurrencyConverter.jsx to use paid API (exchangerate-api.com v6)
+- [x] Step 3: Test functionality (restart npm run dev)

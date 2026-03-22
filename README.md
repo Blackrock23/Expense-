@@ -17,7 +17,7 @@ A modern React-based expense tracker with smart insights and currency conversion
 - Exchange Rate API
 
 ## 🌐 Live Demo
-[Add your Vercel link here]
+(https://expense-henna-one.vercel.app/)
 
 ## 📦 Installation
 

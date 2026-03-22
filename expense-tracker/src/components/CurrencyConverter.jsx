@@ -13,10 +13,21 @@ export default function CurrencyConverter({ expenses }) {
     setLoading(true);
     setError("");
 
-    fetch(`https://api.exchangerate.host/latest?base=INR&symbols=${currency}`)
+    const apiKey = import.meta.env.VITE_EXCHANGE_API_KEY;
+    if (!apiKey) {
+      setError("API key missing. Check .env file.");
+      setLoading(false);
+      return;
+    }
+
+    fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/INR?symbols=${currency}`)
       .then((res) => res.json())
       .then((data) => {
-        setRate(data.rates[currency]);
+        if (data.result === "success") {
+          setRate(data.conversion_rates[currency]);
+        } else {
+          setError("API error: " + (data.error_info || "Unknown"));
+        }
         setLoading(false);
       })
       .catch(() => {
@@ -42,7 +53,7 @@ export default function CurrencyConverter({ expenses }) {
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {rate && !loading && (
+      {rate && !loading && !error && (
         <p>
           {currency}: {(total * rate).toFixed(2)}
         </p>
