@@ -3,32 +3,34 @@ body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #1f1c2c, #928dab);
   color: white;
+  line-height: 1.6;
 }
 
 .app {
-  padding: 20px;
-  max-width: 1100px;
+  padding: clamp(1rem, 4vw, 2rem);
+  max-width: min(1100px, 95vw);
   margin: auto;
 }
 
 .title {
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 20px;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  margin-bottom: clamp(1rem, 4vw, 2rem);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
 }
 
 .card {
   background: rgba(255,255,255,0.08);
   backdrop-filter: blur(12px);
-  padding: 15px;
+  padding: clamp(1rem, 3vw, 1.5rem);
   border-radius: 15px;
   transition: 0.3s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
 }
 
 .card:hover {
@@ -36,39 +38,101 @@ body {
 }
 
 input, select, button {
-  padding: 10px;
-  margin: 5px;
+  padding: clamp(0.75rem, 2.5vw, 1rem) clamp(0.75rem, 4vw, 1.25rem);
+  margin: 0.5rem 0;
   border-radius: 8px;
   border: none;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+  min-height: 44px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 button {
   background: #ff7a18;
   color: white;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
+  font-weight: 500;
 }
 
 button:hover {
   background: #e66a14;
+  transform: scale(1.02);
 }
 
 .empty {
   text-align: center;
   opacity: 0.7;
+  font-style: italic;
+}
+
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border-radius: 15px;
+  margin-bottom: 1rem;
+  transition: 0.3s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.expense-item:hover {
+  transform: translateY(-2px);
+}
+
+.expense-details {
+  flex: 1;
+}
+
+.expense-details h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: clamp(1rem, 3vw, 1.25rem);
+}
+
+.category {
+  opacity: 0.8;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amount {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: bold;
+  color: #ff7a18;
 }
 
 .error {
   color: orange;
-  font-size: 0.9em;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
+  .app {
+    padding: 1rem;
+  }
   .grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
   .card {
-    padding: 20px 15px;
-    margin-bottom: 10px;
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card:hover {
+    transform: translateY(-5px) scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduced) {
+  .card,
+  button {
+    transition: none;
   }
 }

@@ -6,10 +6,12 @@ export default function ExpenseList({ expenses, deleteExpense }) {
   return (
     <div>
       {expenses.map((e) => (
-        <div key={e.id} className="card">
-          <h3>{e.name}</h3>
-          <p>{e.category}</p>
-          <p>₹{e.amount}</p>
+        <div key={e.id} className="expense-item">
+          <div className="expense-details">
+            <h4>{e.name}</h4>
+            <span className="category">{e.category}</span>
+            <span className="amount">₹{e.amount}</span>
+          </div>
           <button onClick={() => deleteExpense(e.id)}>Delete</button>
         </div>
       ))}
